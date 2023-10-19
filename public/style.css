@@ -1,23 +1,129 @@
 body {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background: linear-gradient(120deg, #4caf50, #8bc34a);
+    background-size: 200% 200%;
+    animation: gradient 10s infinite alternate;
+    position: relative;
+    overflow: hidden;
 }
 
-.page-section {
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+@keyframes floating {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0); }
+}
+
+.floatingMoney {
+    position: absolute;
+    bottom: 0;
+    width: 50px;
+    animation: floating 5s infinite ease-in-out;
+    opacity: 0.7;
+}
+
+.floatingMoney:first-child {
+    z-index: -1;
+}
+
+.container {
+    z-index: 1;  /* New line */
+    position: relative;  /* New line */
+    background-color: rgba(0, 255, 4, 0.5);
+}
+
+header {
+    text-align: center;
+}
+
+header img {
+    width: 100px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+#switchButton {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+#switchButton:hover {
+    background-color: #555;
+}
+
+.about-link {
+    font-size: 3em;
+}
+
+#aboutContent {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
     padding: 20px;
-    margin: 20px 0;
-    border: 1px solid #ccc;
 }
 
-#section1 {
-    background-color: #e6f7ff;
+#aboutContent h1 {
+    font-size: 2em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #2c3e50;
+    padding-bottom: 10px;
 }
 
-#section2 {
-    background-color: #ffe6e6;
+#aboutContent p {
+    font-size: 1.2em;
+    line-height: 1.5;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#section3 {
-    background-color: #e6ffe6;
+.animated-paragraph {
+    animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.5em;
+    }
+
+    p {
+        font-size: 1.1em;
+    }
 }
