@@ -1,28 +1,70 @@
 class Main {
     constructor() {
-        this.pageViewsKey = 'pageViewsCount';
-        this.initializeCounter();
-        this.displayCount();
+        this.health = 100;
+        this.healthBar = null;
+        this.init();
     }
 
-    initializeCounter() {
-        if (!localStorage.getItem(this.pageViewsKey)) {
-            localStorage.setItem(this.pageViewsKey, '0');
-        }
+    init() {
+        this.createHealthBar();
+        this.addBulletHole();
+        this.addFloatingMoney();
     }
 
-    incrementCount() {
-        let currentCount = parseInt(localStorage.getItem(this.pageViewsKey));
-        currentCount++;
-        localStorage.setItem(this.pageViewsKey, currentCount.toString());
+    createHealthBar() {
+        this.healthBar = document.createElement('div');
+        this.healthBar.setAttribute('id', 'healthBar');
+        this.healthBar.style.width = `${this.health}%`;
+        document.body.appendChild(this.healthBar);
     }
 
-    displayCount() {
-        this.incrementCount();
-        // Update count in div id count
-        document.getElementById('count').innerHTML = 'You have visited this page ' + localStorage.getItem(this.pageViewsKey)  + ' times.'
+    createBulletHole (e){
+
+        const bulletHole = document.createElement('div');
+        bulletHole.className = 'bulletHole';
+        bulletHole.style.left = `${e.pageX}px`;
+        bulletHole.style.top = `${e.pageY}px`;
+
+        // Add random rotation
+        const randomRotation = Math.floor(Math.random() * 360);
+        bulletHole.style.transform = `rotate(${randomRotation}deg)`;
+
+        document.body.appendChild(bulletHole);
+    }
+
+    addBulletHole() {
+        document.addEventListener('click', (e) => {
+            // Check if clicked element or its parent is a button or hyperlink
+            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('A') || e.target.closest('BUTTON')) {
+                return; // Exit the function without adding bullet hole or playing the sound
+            }
+    
+            const gunshotSound = document.getElementById('gunshotSound');
+            gunshotSound.volume = 0.5; // Decreases the volume to half its original level
+            gunshotSound.play();
+
+            this.createBulletHole (e);
+    
+            if (e.target.tagName === "IMG") {
+                this.health -= 10; // Decrease 10% health when clicking on an image.
+                if (this.health <= 0) {
+                    this.health = 0;
+                    const ouchSound = document.getElementById('ouchSound');
+                    ouchSound.play();
+    
+                    alert("Communism is dead!");
+                    // Stop listening to click events to avoid further actions after death
+                    document.removeEventListener('click', e);
+                }
+                this.healthBar.style.width = `${this.health}%`;
+            }
+        });
     }
 }
 
-// Note that we construct the class here, but we don't need to assign it to a variable.
-document.mainClass = new Main();
+// Instantiate the Main class on page load
+document.addEventListener('DOMContentLoaded', () => {
+    new Main();
+});
+
+

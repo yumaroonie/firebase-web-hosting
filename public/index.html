@@ -14,8 +14,6 @@
 
 <!-- Main Content Container -->
 <div id="mainContent">
-    <div class="floatingMoney" style="left: 10%; animation-duration: 4s;">
-        <img src="GetPersonaPhoto.jpeg" alt="Floating Money">
     </div>
     <div class="floatingMoney" style="left: 40%; animation-duration: 5.5s;">
         <img src="GetPersonaPhoto.jpeg" alt="Floating Money">
@@ -26,8 +24,8 @@
 
     <div class="container">
         <header>
-            <img src="GetPersonaPhoto.jpeg" alt="Sarah Brown">
-            <h1>Sarah Brown's Journey</h1>
+            <img src="communism.png" alt="Sarah Brown">
+            <h1>Sarah Brown's Journey (Shoot Communism not Sarah !!!)</h1>
             <p>Exploring the World of Microeconomics</p>
         </header>
 
@@ -52,16 +50,39 @@
     const switchButton = document.getElementById('switchButton');
 
     switchButton.addEventListener('click', () => {
-        if (mainContent.style.display === "none") {
-            mainContent.style.display = "block";
-            aboutContent.style.display = "none";
-            mainBody.style.background = "linear-gradient(120deg, #4caf50, #8bc34a)";
-        } else {
-            mainContent.style.display = "none";
-            aboutContent.style.display = "block";
-            mainBody.style.background = "#f4f4f4";
-        }
-    });
+    const bulletHoles = document.querySelectorAll('.bulletHole');
+    const healthBar = document.getElementById('healthBar');
+    const floatingMoneyElements = document.querySelectorAll('.floatingMoney');
+    const container = document.querySelector('.container');
+    
+    if (mainContent.style.display === "none") {
+        mainContent.style.display = "block";
+        aboutContent.style.display = "none";
+        mainBody.style.background = "linear-gradient(120deg, #4caf50, #8bc34a)";
+
+        // Show health bar and bullet holes
+        healthBar.style.display = 'block';
+        bulletHoles.forEach(hole => hole.style.display = 'block');
+        
+        // Show floating money images, the green strip (container), and the hyperlink
+        floatingMoneyElements.forEach(money => money.style.display = 'block');
+        container.style.display = 'block';
+        
+    } else {
+        mainContent.style.display = "none";
+        aboutContent.style.display = "block";
+        mainBody.style.background = "#f4f4f4";
+
+        // Hide health bar and bullet holes
+        healthBar.style.display = 'none';
+        bulletHoles.forEach(hole => hole.style.display = 'none');
+
+        // Hide floating money images, the green strip (container), and the hyperlink
+        floatingMoneyElements.forEach(money => money.style.display = 'none');
+        container.style.display = 'none';
+    }
+});
+
 
     document.querySelectorAll('.floatingMoney img').forEach(money => {
         money.addEventListener('mouseover', () => {
@@ -73,6 +94,11 @@
         });
     });
 </script>
+<!-- ... (rest of the file) ... -->
+<script src="scripts/Main.js"></script>
+
+<audio id="gunshotSound" src="audio/gunshot.mp3" preload="auto"></audio>
+<audio id="ouchSound" src="audio/ouch.mp3" preload="auto"></audio>
 
 </body>
 </html>

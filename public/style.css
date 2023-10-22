@@ -26,6 +26,7 @@ body {
     width: 50px;
     animation: floating 5s infinite ease-in-out;
     opacity: 0.7;
+    z-index: 2;
 }
 
 .floatingMoney:first-child {
@@ -33,9 +34,14 @@ body {
 }
 
 .container {
+    pointer-events: none;
     z-index: 1;  /* New line */
     position: relative;  /* New line */
     background-color: rgba(0, 255, 4, 0.5);
+}
+
+.container * {
+    pointer-events: auto;
 }
 
 header {
@@ -126,4 +132,26 @@ section {
     p {
         font-size: 1.1em;
     }
+}
+
+/* ... (existing styles) ... */
+
+#healthBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 10px;
+    background: red;
+    z-index: 1000;
+}
+
+.bulletHole {
+    position: absolute;
+    background-image: url('bullet-holes-8.png'); /* Assuming you have a bullet hole image */
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 30px;
+    height: 30px;
+    pointer-events: none; /* To avoid clicking on the bullet hole div */
+    z-index: 999;
 }
