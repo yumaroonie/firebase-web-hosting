@@ -70,7 +70,8 @@ section {
     cursor: pointer;
     border-radius: 5px;
     font-size: 1em;
-    transition: background-color 0.3s ease;
+    transition: backgroun
+    d-color 0.3s ease;
 }
 
 #switchButton:hover {
@@ -78,6 +79,10 @@ section {
 }
 
 .about-link {
+    font-size: 3em;
+}
+
+.game-link {
     font-size: 3em;
 }
 
