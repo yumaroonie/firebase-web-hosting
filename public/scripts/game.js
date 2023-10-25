@@ -6,8 +6,8 @@ class PongGame {
             x: this.canvas.width / 2,
             y: this.canvas.height / 2,
             radius: 10,
-            speedX: 2,
-            speedY: 2,
+            speedX: 8,
+            speedY: 8,
             color: 'white'
         };
 
@@ -16,7 +16,7 @@ class PongGame {
             y: this.canvas.height / 2 - 50,
             width: 15,
             height: 100,
-            speedY: 16,
+            speedY: 8,
             color: 'white'
         };
 
@@ -25,7 +25,7 @@ class PongGame {
             y: this.canvas.height / 2 - 50,
             width: 15,
             height: 100,
-            speedY: 16,
+            speedY: 8,
             color: 'white'
         };
 
@@ -167,14 +167,41 @@ class PongGame {
         this.ctx.font = '30px Arial';
         this.ctx.fillText(this.leftScore, this.canvas.width / 4, 30);
         this.ctx.fillText(this.rightScore, 3 * this.canvas.width / 4, 30);
+
+        // Draw instructions
+        this.ctx.font = '20px "Press Start 2P"';  // Pixelated font
+
+        // Calculate the center for each text
+        let text1 = 'Left Player: W/S, Right Player: ArrowUp/ArrowDown';
+        let text2 = 'Press "R" to reset';
+
+        let centerText1 = (1450 - this.ctx.measureText(text1).width) / 2;
+        let centerText2 = (1450 - this.ctx.measureText(text2).width) / 2;
+
+        this.ctx.fillStyle = 'rgba(200, 200, 200, 0.7)';  // Translucent grey
+        this.ctx.fillText(text1, centerText1, this.canvas.height - 60);
+        this.ctx.fillText(text2, centerText2, this.canvas.height - 30);
+
+
     }
     
 
     resetGame() {
+        // Reset scores
         this.leftScore = 0;
         this.rightScore = 0;
-        this.resetBall();
+    
+        // Reset ball's position and direction
+        this.ball.x = this.canvas.width / 2;
+        this.ball.y = this.canvas.height / 2;
+        this.ball.speedX = 8;
+        this.ball.speedY = 8;
+    
+        // Move paddles to the middle
+        this.leftPaddle.y = (this.canvas.height - this.leftPaddle.height) / 2;
+        this.rightPaddle.y = (this.canvas.height - this.rightPaddle.height) / 2;
     }
+    
 
     start() {
         this.resetGame();
