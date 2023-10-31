@@ -2,7 +2,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js';
 import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-analytics.js';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js';
+import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -119,6 +119,23 @@ class PongGame {
             case 'r':
                 this.resetGame();
                 break;
+        }
+    }
+
+    async retrieveTopScores() {
+        // Reference to the 'scores' collection
+        const scoresRef = collection(db, "scores");
+    
+        // Create a query against the collection, ordering by score in descending order, limiting to 10
+        const queryRef = query(scoresRef, orderBy("score", "desc"), limit(10));
+    
+        try {
+            // Execute the query
+            const querySnapshot = await getDocs(queryRef);
+            const scores = querySnapshot.docs.map(doc => doc.data());
+            console.log("Top 10 Scores:", scores);
+        } catch (error) {
+            console.error("Error fetching top scores: ", error);
         }
     }
 
@@ -259,9 +276,15 @@ class PongGame {
     }
 }
 
-document.myGame = new PongGame();
+document.addEventListener('DOMContentLoaded', (event) => {
+    const myGame = new PongGame();
+    document.myGame = myGame;
+    myGame.retrieveTopScores();
+});
 
-// log the score once every second
+// Log the score once every second
 setInterval(() => {
-    console.log(`Left Score: ${document.myGame.leftScore}, Right Score: ${document.myGame.rightScore}`);
+    if (document.myGame) {
+        console.log(`Left Score: ${document.myGame.leftScore}, Right Score: ${document.myGame.rightScore}`);
+    }
 }, 1000);
