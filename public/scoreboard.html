@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoreboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+        }
+        .scoreboard {
+            margin-top: 50px;
+        }
+        .score {
+            padding: 5px;
+        }
+        a {
+            color: #6495ED; /* Muted blue */
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="scoreboard">
+        <h1>Top 10 Scores</h1>
+        <div id="scoresList"></div>
+    </div>
+    <a href="game.html" style="display: block; margin: 20px auto; font-family: 'Press Start 2P', cursive; color: #6495ED; text-decoration: underline;">Back to Pong</a>
+    <script type="module">
+        import { retrieveTopScores } from './scripts/game.js'; // Assuming retrieveTopScores is exported
+
+        async function displayScores() {
+            const scores = await retrieveTopScores();
+            const scoresListElement = document.getElementById('scoresList');
+            scoresListElement.innerHTML = scores.map((score, index) => `
+                <div class="score">
+                    ${index + 1}. ${score.initials} - ${score.score}
+                </div>
+            `).join('');
+        }
+
+        displayScores();
+    </script>
+</body>
+</html>

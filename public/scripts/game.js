@@ -24,6 +24,33 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
+// Move retrieveTopScores outside of the class and make it a standalone function
+async function retrieveTopScores() {
+    // Initialize Firebase
+    const db = getFirestore(initializeApp(firebaseConfig));
+
+    // Reference to the 'scores' collection
+    const scoresRef = collection(db, "scores");
+    
+    // Create a query against the collection, ordering by score in descending order, limiting to 10
+    const scoresQuery = query(scoresRef, orderBy("score", "desc"), limit(10));
+    
+    try {
+        // Execute the query and return the scores
+        const querySnapshot = await getDocs(scoresQuery);
+        return querySnapshot.docs.map(doc => ({
+            initials: doc.data().initials,
+            score: doc.data().score
+        }));
+    } catch (error) {
+        console.error("Error fetching top scores: ", error);
+        return []; // Return an empty array in case of error
+    }
+}
+
+// Export the retrieveTopScores function at the bottom of your module
+export { retrieveTopScores };
+
 class PongGame {
     constructor() {
         this.canvas = document.getElementById('gameCanvas');
@@ -119,23 +146,6 @@ class PongGame {
             case 'r':
                 this.resetGame();
                 break;
-        }
-    }
-
-    async retrieveTopScores() {
-        // Reference to the 'scores' collection
-        const scoresRef = collection(db, "scores");
-    
-        // Create a query against the collection, ordering by score in descending order, limiting to 10
-        const queryRef = query(scoresRef, orderBy("score", "desc"), limit(10));
-    
-        try {
-            // Execute the query
-            const querySnapshot = await getDocs(queryRef);
-            const scores = querySnapshot.docs.map(doc => doc.data());
-            console.log("Top 10 Scores:", scores);
-        } catch (error) {
-            console.error("Error fetching top scores: ", error);
         }
     }
 
@@ -279,7 +289,7 @@ class PongGame {
 document.addEventListener('DOMContentLoaded', (event) => {
     const myGame = new PongGame();
     document.myGame = myGame;
-    myGame.retrieveTopScores();
+    //myGame.retrieveTopScores();
 });
 
 // Log the score once every second
