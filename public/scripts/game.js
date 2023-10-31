@@ -286,6 +286,47 @@ class PongGame {
     }
 }
 
+// ... rest of your code ...
+
+// Modify verifyHuman to only prompt if the session flag isn't set
+function verifyHuman() {
+    // Check if the verification has already been done in this session
+    if (!sessionStorage.getItem('humanVerified')) {
+        const challengeQuestion = "What is 7 plus 5?";
+        const correctAnswer = "12"; // The correct answer to the challenge
+
+        let userAnswer = prompt(challengeQuestion);
+
+        // Check if the answer is correct
+        if(userAnswer === correctAnswer) {
+            // If correct, start the game and set the session flag
+            const myGame = new PongGame();
+            document.myGame = myGame;
+            sessionStorage.setItem('humanVerified', 'true');
+        } else {
+            // If incorrect, alert the user and call verifyHuman again
+            alert("Incorrect answer. Please try again to verify you're a human.");
+            verifyHuman();
+        }
+    } else {
+        // If verified, just start the game
+        const myGame = new PongGame();
+        document.myGame = myGame;
+    }
+}
+
+// Only call verifyHuman on initial page load
+document.addEventListener('DOMContentLoaded', (event) => {
+    if (!document.getElementById('gameCanvas')) {
+        // If there's no game canvas, it means we are not on the game page, and we should not verify
+        return;
+    }
+    verifyHuman();
+});
+
+// ... rest of your code ...
+
+
 document.addEventListener('DOMContentLoaded', (event) => {
     const myGame = new PongGame();
     document.myGame = myGame;
