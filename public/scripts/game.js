@@ -94,7 +94,10 @@ class PongGame {
 
         this.start();
     // Indicate that this is the initial load so it doesn't prompt for initials
-    this.resetGame(true);
+
+    this.isInitialLoad = true;
+
+    this.awaitingInitials = false;
         document.addEventListener('keydown', (e) => this.handleInput(e));
 
         document.addEventListener('keydown', (e) => {
@@ -144,7 +147,9 @@ class PongGame {
                 this.rightPaddle.y += this.rightPaddle.speedY;
                 break;
             case 'r':
-                this.resetGame();
+                if (!this.awaitingInitials) { // Add a flag check
+                    this.resetGame(false);
+                }
                 break;
         }
     }
@@ -242,28 +247,36 @@ class PongGame {
     
 
     resetGame(isInitialLoad = false) {
-        if (!isInitialLoad) {
-            // Prompt for player initials
+        
+        if (this.isInitialLoad) {  // If it's the initial load, don't prompt for initials
+            this.isInitialLoad = false;  // Set the flag to false after the initial load
+            return;
+        }
+        
+        if (!this.awaitingInitials) {
+            this.awaitingInitials = true;
             let initials = prompt("Enter your initials (3 letters):", "ABC");
             if (initials && initials.length === 3) {
-                // Save score to Firestore
                 this.saveScore(initials, this.leftScore, this.rightScore);
             } else {
                 alert("Please enter 3 letters for your initials.");
-                return; // Don't reset the game if initials aren't provided
             }
+            this.awaitingInitials = false;
         }
-    
+
+
         // Reset scores
         this.leftScore = 0;
         this.rightScore = 0;
-    
+
         // Reset ball's position and direction
         this.resetBall();
-    
+
         // Move paddles to the middle
         this.leftPaddle.y = (this.canvas.height - this.leftPaddle.height) / 2;
         this.rightPaddle.y = (this.canvas.height - this.rightPaddle.height) / 2;
+
+        this.isInitialLoad = false; // Set the flag to false after the initial load
     }
     
     saveScore(initials, leftScore, rightScore) {
@@ -303,6 +316,8 @@ function verifyHuman() {
             const myGame = new PongGame();
             document.myGame = myGame;
             sessionStorage.setItem('humanVerified', 'true');
+            myGame.isInitialLoad = false;
+
         } else {
             // If incorrect, alert the user and call verifyHuman again
             alert("Incorrect answer. Please try again to verify you're a human.");
@@ -315,6 +330,7 @@ function verifyHuman() {
     }
 }
 
+/** 
 // Only call verifyHuman on initial page load
 document.addEventListener('DOMContentLoaded', (event) => {
     if (!document.getElementById('gameCanvas')) {
@@ -323,14 +339,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
     verifyHuman();
 });
+**/
 
 // ... rest of your code ...
 
 
+// This event listener should only exist once in your code.
 document.addEventListener('DOMContentLoaded', (event) => {
-    const myGame = new PongGame();
-    document.myGame = myGame;
-    //myGame.retrieveTopScores();
+    if (document.getElementById('gameCanvas')) {
+        verifyHuman(); // This will call verifyHuman and start the game
+    }
 });
 
 // Log the score once every second
