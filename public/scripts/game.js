@@ -66,6 +66,8 @@ class PongGame {
         this.rightScore = 0;
 
         this.start();
+    // Indicate that this is the initial load so it doesn't prompt for initials
+    this.resetGame(true);
         document.addEventListener('keydown', (e) => this.handleInput(e));
 
         document.addEventListener('keydown', (e) => {
@@ -212,26 +214,29 @@ class PongGame {
     }
     
 
-    resetGame() {
-        // Prompt for player initials
-        let initials = prompt("Enter your initials (3 letters):", "ABC");
-        if (initials && initials.length === 3) {
-            // Save score to Firestore
-            this.saveScore(initials, this.leftScore, this.rightScore);
-            
-            // Reset scores
-            this.leftScore = 0;
-            this.rightScore = 0;
-        
-            // Reset ball's position and direction
-            this.resetBall();
-        
-            // Move paddles to the middle
-            this.leftPaddle.y = (this.canvas.height - this.leftPaddle.height) / 2;
-            this.rightPaddle.y = (this.canvas.height - this.rightPaddle.height) / 2;
-        } else {
-            alert("Please enter 3 letters for your initials.");
+    resetGame(isInitialLoad = false) {
+        if (!isInitialLoad) {
+            // Prompt for player initials
+            let initials = prompt("Enter your initials (3 letters):", "ABC");
+            if (initials && initials.length === 3) {
+                // Save score to Firestore
+                this.saveScore(initials, this.leftScore, this.rightScore);
+            } else {
+                alert("Please enter 3 letters for your initials.");
+                return; // Don't reset the game if initials aren't provided
+            }
         }
+    
+        // Reset scores
+        this.leftScore = 0;
+        this.rightScore = 0;
+    
+        // Reset ball's position and direction
+        this.resetBall();
+    
+        // Move paddles to the middle
+        this.leftPaddle.y = (this.canvas.height - this.leftPaddle.height) / 2;
+        this.rightPaddle.y = (this.canvas.height - this.rightPaddle.height) / 2;
     }
     
     saveScore(initials, leftScore, rightScore) {
@@ -250,7 +255,6 @@ class PongGame {
     }
 
     start() {
-        this.resetGame();
         this.update();
     }
 }
