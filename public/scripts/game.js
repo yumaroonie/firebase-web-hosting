@@ -1,3 +1,29 @@
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js';
+import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-analytics.js';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js';
+
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBlGvy3sZf3yoCluPzdWXLbqZX6dEbRq0Q",
+  authDomain: "chris-headley.firebaseapp.com",
+  projectId: "chris-headley",
+  storageBucket: "chris-headley.appspot.com",
+  messagingSenderId: "973056023702",
+  appId: "1:973056023702:web:ec2f751f86c43b68f9b6b7",
+  measurementId: "G-3R45QMY0RJ"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+
 class PongGame {
     constructor() {
         this.canvas = document.getElementById('gameCanvas');
@@ -187,21 +213,41 @@ class PongGame {
     
 
     resetGame() {
-        // Reset scores
-        this.leftScore = 0;
-        this.rightScore = 0;
-    
-        // Reset ball's position and direction
-        this.ball.x = this.canvas.width / 2;
-        this.ball.y = this.canvas.height / 2;
-        this.ball.speedX = 8;
-        this.ball.speedY = 8;
-    
-        // Move paddles to the middle
-        this.leftPaddle.y = (this.canvas.height - this.leftPaddle.height) / 2;
-        this.rightPaddle.y = (this.canvas.height - this.rightPaddle.height) / 2;
+        // Prompt for player initials
+        let initials = prompt("Enter your initials (3 letters):", "ABC");
+        if (initials && initials.length === 3) {
+            // Save score to Firestore
+            this.saveScore(initials, this.leftScore, this.rightScore);
+            
+            // Reset scores
+            this.leftScore = 0;
+            this.rightScore = 0;
+        
+            // Reset ball's position and direction
+            this.resetBall();
+        
+            // Move paddles to the middle
+            this.leftPaddle.y = (this.canvas.height - this.leftPaddle.height) / 2;
+            this.rightPaddle.y = (this.canvas.height - this.rightPaddle.height) / 2;
+        } else {
+            alert("Please enter 3 letters for your initials.");
+        }
     }
     
+    saveScore(initials, leftScore, rightScore) {
+        // Here you would use Firestore's API to save the score
+        const db = getFirestore(app);
+        const scoresRef = collection(db, "scores");
+        addDoc(scoresRef, {
+            initials: initials,
+            score: `${leftScore} to ${rightScore}`,
+            timestamp: serverTimestamp() // To record the time when the score was added
+        }).then(() => {
+            console.log("Score saved successfully.");
+        }).catch((error) => {
+            console.error("Error saving score: ", error);
+        });
+    }
 
     start() {
         this.resetGame();
