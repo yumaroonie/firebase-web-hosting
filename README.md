@@ -24,8 +24,7 @@ A new document is added to the "scores" collection in Firestore with the player'
 
 Retrieving and Displaying Scores:
 
-The retrieveTopScores function is used to fetch the top scores from Firestore -- the definition of "top" scores is described on the scoreboard.html webpage itself (beneath the scoreboard).
-It creates a query against the "scores" collection, ordering the results by the score in descending order and limiting the results to the top 10 scores.
+The retrieveTopScores function is used to fetch the top scores from Firestore. It creates a query against the "scores" collection, ordering the results by the score in descending order and limiting the results to the top 10 scores.
 This query is executed asynchronously using getDocs(scoresQuery), which retrieves the documents that match the query.
 The retrieved documents are then mapped to an array of objects containing the initials and scores, which is returned by the function.
 
